@@ -1,0 +1,8 @@
+{
+  "short_name": "Notes App",
+  "name": "Create Notes App With React",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
