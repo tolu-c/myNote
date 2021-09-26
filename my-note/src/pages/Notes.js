@@ -13,7 +13,6 @@ function Notes() {
   let getNotes = async () => {
     let response = await fetch("http://localhost:5000/notes/");
     let data = await response.json();
-
     setNotes(data);
   };
 

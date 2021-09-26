@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { ReactComponent as BackArrow } from "../assets/arrowLeft.svg";
 import { Link } from "react-router-dom";
 
-function Note({ match, history }) {
-  let noteId = Number(match.params.id);
+const Note = ({ match, history }) => {
+  let noteId = match.params.id;
 
   let [note, setNote] = useState(null);
 
@@ -13,13 +13,16 @@ function Note({ match, history }) {
   }, [noteId]);
 
   let getNote = async () => {
-    let response = await fetch(`http://localhost:5000/notes/${noteId}`);
+    if (noteId === "new") {
+      return;
+    }
+    let response = await fetch(`http://127.0.0.1:5000/notes/${noteId}`);
     let data = await response.json();
     setNote(data);
   };
 
-  let updateNote = async () => {
-    await fetch(`http://localhost:5000/notes/${noteId}`, {
+  const updateNote = async () => {
+    await fetch(`http://127.0.0.1:5000/notes/${noteId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -28,15 +31,26 @@ function Note({ match, history }) {
     });
   };
 
-  let deleteNote = async () => {
-    await fetch(`http://localhost:5000/notes/${noteId}`, {
+  const deleteNote = async () => {
+    await fetch(`http://127.0.0.1:5000/notes/${noteId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(note),
     });
+    
     history.push("/");
+  };
+
+  const createNote = async () => {
+    await fetch(`http://127.0.0.1:5000/notes/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...note, updated: new Date() }),
+    });
   };
 
   let handleSubmit = () => {
@@ -44,8 +58,9 @@ function Note({ match, history }) {
       deleteNote();
     } else if (noteId !== "new") {
       updateNote();
+    } else if (noteId === "new" && note !== null) {
+      createNote();
     }
-
     history.push("/");
   };
 
@@ -72,6 +87,6 @@ function Note({ match, history }) {
       ></textarea>
     </div>
   );
-}
+};
 
 export default Note;
